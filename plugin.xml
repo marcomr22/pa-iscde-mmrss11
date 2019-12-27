@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="providers" name="CodeGenerator" schema="schema/providers.exsd"/>
+   <extension-point id="providers2" name="Providers 2" schema="schema/providers2.exsd"/>
+   <extension
+         id="id1"
+         name="Refactoring Viewer"
+         point="pt.iscte.pidesco.view">
+      <view
+            class="pt.iscte.pidesco.refactoring.Viewer">
+      </view>
+   </extension>
+
+</plugin>
