@@ -16,17 +16,13 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -42,6 +38,7 @@ public class Viewer implements PidescoView{
 	public Collection<SourceElement> selection = new ArrayList<SourceElement>();
 	private Compare compare;
 	private List<CodeGeneratorInt> code_gen = new ArrayList<CodeGeneratorInt>();
+	private List<String> code_gen_names = new ArrayList<String>();
 
 	public  void setSelection(Collection<SourceElement> c) {
 		selection = c;
@@ -75,13 +72,13 @@ public class Viewer implements PidescoView{
 		report.setText("Report Log: ");
 
 		Text reportLog = new Text(composite, SWT.BORDER | SWT.READ_ONLY);
-		reportLog.setLayoutData(new RowData(200,SWT.DEFAULT));
+		reportLog.setLayoutData(new RowData(235,SWT.DEFAULT));
 
 		Label superClass = new Label(composite, SWT.PUSH);
 		superClass.setText("Name the Super Class: ");
 
 		Text superClass_name = new Text(composite, SWT.BORDER );
-		superClass_name.setLayoutData(new RowData(200,SWT.DEFAULT));
+		superClass_name.setLayoutData(new RowData(235,SWT.DEFAULT));
 
 		button.addListener(SWT.Selection, new Listener() {
 
@@ -91,16 +88,16 @@ public class Viewer implements PidescoView{
 					reportLog.setText("Please select some classes.");
 				}
 				else {
-					boolean canWork = false;
+					int counter = 0;
 					compare = new Compare();
 					for (SourceElement sourceElement : selection) {
 						if(sourceElement.isClass()) {
 							Visitor visitor = new Visitor(compare);
 							Parser.parse(sourceElement.getFile().getAbsolutePath(), visitor);
-							canWork = true;
+							counter++;
 						}
 					}
-					if(canWork) {
+					if(counter > 1) {
 						compare.toString();
 						compare.compare();
 						reportLog.setText("");
@@ -147,9 +144,9 @@ public class Viewer implements PidescoView{
 					reportLog.setText("Please select some classes.");
 				}
 				else {
-					List a = (List) selection;
+					List<SourceElement> a = (List<SourceElement>) selection;
 					String name = superClass_name.getText();
-					if(name == "") {
+					if(name.length()<=0) {
 						reportLog.setText("Please insert a name for the Super Class.");
 					}
 					else {
@@ -169,7 +166,6 @@ public class Viewer implements PidescoView{
 					fw.write(s);
 					fw.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -188,9 +184,8 @@ public class Viewer implements PidescoView{
 		for(IExtension e : extensions) {
 			IConfigurationElement[] confElements = e.getConfigurationElements();
 			for(IConfigurationElement c : confElements) {
-				String s = c.getAttribute("name");
+				code_gen_names.add(c.getName());
 				try {
-					Object o = c.createExecutableExtension("class");
 					CodeGeneratorInt cg = (CodeGeneratorInt) c.createExecutableExtension("class");
 					code_gen.add(cg);
 				} catch (CoreException e1) {
@@ -199,17 +194,15 @@ public class Viewer implements PidescoView{
 				}
 			}
 		}
-
-
-
-
+		int i = 0;
 		for (CodeGeneratorInt cg: code_gen) {
-
+			String cg_name = code_gen_names.get(i);
+			i++;
 			Composite comp2 = new Composite(viewArea, SWT.EMBEDDED);
 			comp2.setLayout(new RowLayout(SWT.VERTICAL));
 
 			Label label2 = new Label(comp2, SWT.PUSH);
-			label2.setText("Nome do Componente");
+			label2.setText(cg_name);
 
 			Button button4 = new Button(comp2, SWT.PUSH);
 			button4.setText("Preview");
@@ -227,16 +220,17 @@ public class Viewer implements PidescoView{
 					text1.setText(cg.generateContent());
 				}
 			});
+			
 			button2.addListener(SWT.Selection, new Listener() {
 
 				@Override
 				public void handleEvent(Event event) {
 					String name = superClass_name.getText();
-					if(name == "") {
+					if(name.length()<=0) {
 						reportLog.setText("Please insert a name for the Super Class.");
 					}
 					else {
-						List a = (List) selection;
+						List<SourceElement> a = (List<SourceElement>) selection;
 						String path = ((SourceElement) a.get(0)).getParent().getFile().getAbsolutePath() + "/";
 						cg.inputValues(name, compare.getFinalFields(), compare.getFinalMethods());
 						File file = createFile(path, name);

@@ -49,7 +49,7 @@ public class Compare {
 		}
 		return false;
 	}
-	
+
 	public void compileFiedlMatrix() {
 		Matrix<StructuredClass, FieldDeclaration> m = new Matrix<StructuredClass, FieldDeclaration>( fields.size(), classes.size());
 		for (StructuredClass structuredClass : classes) {
@@ -69,7 +69,7 @@ public class Compare {
 		} 
 		this.mFieldsMatrix = m;
 	}
-	
+
 	public void compileMethodlMatrix() {
 		Matrix<StructuredClass, MethodDeclaration> m = new Matrix<StructuredClass, MethodDeclaration>(methods.size(), chosenClasses.size());
 		for (StructuredClass structuredClass : chosenClasses) {
@@ -147,19 +147,21 @@ public class Compare {
 	}
 
 	public void compare() {
-		
+
 		getAllFields();
 		compileFiedlMatrix();
 		int[] l = mFieldsMatrix.getSugestion();
 		mFieldsMatrix.choose(l);
 		this.final_fields = mFieldsMatrix.getFinalM();
 		this.chosenClasses = mFieldsMatrix.getFinalC();
-		
-		getAllMethods();
-		compileMethodlMatrix();
-		int[] l2 = mMethodsMatrix.getSugestion();
-		mMethodsMatrix.choose(l2);
-		this.final_methods = mMethodsMatrix.getFinalM();
+		if(this.chosenClasses.size()>1) {
+			getAllMethods();
+			compileMethodlMatrix();
+			int[] l2 = mMethodsMatrix.getSugestion();
+			mMethodsMatrix.choose(l2);
+			this.final_methods = mMethodsMatrix.getFinalM();
+
+		}
 	}
 
 	public List<StructuredClass> getClasses() {
