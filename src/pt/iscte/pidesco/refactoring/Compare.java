@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 public class Compare {
 
 	private List<StructuredClass> classes = new ArrayList<StructuredClass>();
+	private List<StructuredClass> chosenClasses = new ArrayList<StructuredClass>();
 	private List<FieldDeclaration> fields = new ArrayList<>();
 	private List<MethodDeclaration> methods = new ArrayList<>();
 	private List<FieldDeclaration> final_fields = new ArrayList<>();
@@ -70,14 +71,14 @@ public class Compare {
 	}
 	
 	public void compileMethodlMatrix() {
-		Matrix<StructuredClass, MethodDeclaration> m = new Matrix<StructuredClass, MethodDeclaration>(methods.size(), classes.size());
-		for (StructuredClass structuredClass : classes) {
+		Matrix<StructuredClass, MethodDeclaration> m = new Matrix<StructuredClass, MethodDeclaration>(methods.size(), chosenClasses.size());
+		for (StructuredClass structuredClass : chosenClasses) {
 			m.addC(structuredClass);
 		}
 		for (MethodDeclaration method: methods) {
 			m.addM(method);
 		}
-		for (StructuredClass c : classes) {
+		for (StructuredClass c : chosenClasses) {
 			for (MethodDeclaration method : methods) {
 				for (int i = 0; i < c.getMethods().size(); i++) {
 					if(sameMethod(c.getMethods().get(i),method)){
@@ -87,20 +88,6 @@ public class Compare {
 			}
 		} 
 		this.mMethodsMatrix = m;
-	}
-	
-	//SuperClasses
-	public void includeSuperClasses() {
-		List<Class> aux_classes = new ArrayList<Class>();
-		for (StructuredClass structuredClass : classes) {
-			if(structuredClass.getHasSuperClass()) {
-				aux_classes.add(structuredClass.getSuperClassType());
-			}
-		}
-		for (Class clazz : aux_classes) {
-			Visitor visitor = new Visitor(this);
-			//Parser.parse(, visitor);
-		}
 	}
 
 	public void getAllFields() {
@@ -134,7 +121,7 @@ public class Compare {
 	public void getAllMethods() {
 		List<MethodDeclaration> methodList = new ArrayList<MethodDeclaration>();
 		int i;
-		for (StructuredClass clazz : classes) {
+		for (StructuredClass clazz : chosenClasses) {
 			for (MethodDeclaration m1: clazz.getMethods()) {
 				i = 0;
 				boolean contains = false;
@@ -160,15 +147,18 @@ public class Compare {
 	}
 
 	public void compare() {
+		
 		getAllFields();
-		getAllMethods();
 		compileFiedlMatrix();
-		compileMethodlMatrix();
 		int[] l = mFieldsMatrix.getSugestion();
-		int[] l2 =mMethodsMatrix.getSugestion();
 		mFieldsMatrix.choose(l);
-		mMethodsMatrix.choose(l2);
 		this.final_fields = mFieldsMatrix.getFinalM();
+		this.chosenClasses = mFieldsMatrix.getFinalC();
+		
+		getAllMethods();
+		compileMethodlMatrix();
+		int[] l2 = mMethodsMatrix.getSugestion();
+		mMethodsMatrix.choose(l2);
 		this.final_methods = mMethodsMatrix.getFinalM();
 	}
 
