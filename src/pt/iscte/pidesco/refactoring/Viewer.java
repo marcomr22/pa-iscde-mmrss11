@@ -127,9 +127,16 @@ public class Viewer implements PidescoView{
 
 			@Override
 			public void handleEvent(Event event) {
+				String name = superClass_name.getText();
+				if(name.length()<=0) {
+					reportLog.setText("Please insert a name for the Super Class.");
+				}
+				else {
 				CodeGeneratorInt c = new CodeGen();
-				c.inputValues("Superclass", compare.getFinalFields(), compare.getFinalMethods());
+				c.inputValues(name, compare.getFinalFields(), compare.getFinalMethods());
 				text.setText(c.generateContent());
+					reportLog.setText("");
+				}
 			}
 		});
 
@@ -156,6 +163,7 @@ public class Viewer implements PidescoView{
 						c.inputValues(name, compare.getFinalFields(), compare.getFinalMethods());
 						File file = createFile(path, name);
 						writeFile(c.generateContent(), file);
+						reportLog.setText("");
 					}
 				}
 			}
@@ -217,7 +225,14 @@ public class Viewer implements PidescoView{
 
 				@Override
 				public void handleEvent(Event event) {
+					String name = superClass_name.getText();if(name.length()<=0) {
+						reportLog.setText("Please insert a name for the Super Class.");
+					}
+					else {
+					cg.inputValues(name, compare.getFinalFields(), compare.getFinalMethods());
 					text1.setText(cg.generateContent());
+					reportLog.setText("");
+					}
 				}
 			});
 			
@@ -235,6 +250,7 @@ public class Viewer implements PidescoView{
 						cg.inputValues(name, compare.getFinalFields(), compare.getFinalMethods());
 						File file = createFile(path, name);
 						writeFile(cg.generateContent(), file);
+						reportLog.setText("");
 					}
 				}
 

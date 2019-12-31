@@ -25,7 +25,7 @@ public class CodeGen implements CodeGeneratorInt{
 	public String generateContent() {
 		String s = "public class " + name + "{" + "\n";
 		for (FieldDeclaration field : fields) {
-			s = s + "\n" + field.toString();
+			s = s + "\n" + "\t" + field.toString();
 		}
 		for (MethodDeclaration method : methods) {
 			s = s + "\n" + method.toString();
