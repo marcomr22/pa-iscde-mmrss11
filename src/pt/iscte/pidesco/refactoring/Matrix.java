@@ -55,23 +55,6 @@ public class Matrix <C,M>{
 		return this.final_m;
 	}
 
-	//	public void getSugestion() {
-	//		List<C> c = new ArrayList<C>();
-	//		List<M> m = new ArrayList<M>();
-	//		for (int i = 0; i < columns; i++) {
-	//			for (int j = 0; j < rows; j++) {
-	//				if(matrix[i][j] == 1 && !m.contains(m_map.get(j))) {
-	//					c.add((C) c_map.get(j));
-	//				}
-	//				else if(matrix[i][j] == 0 && m.contains(m_map.get(j))) {
-	//					c.remove(m_map.get(j));
-	//				}
-	//			}
-	//		}
-	//		this.final_c = c;
-	//		this.final_m = m;
-	//	}
-	
 	//retorna um vetor com os valores a 1 em comum
 	public int[] compute(int[] v1, int[] v2) {
 		int[] v3 = new int[v1.length];
@@ -83,7 +66,6 @@ public class Matrix <C,M>{
 		return v3;
 	}
 
-	
 	//retorna qual o vetor com maior numero de 1's
 	public int[] bigger(int[] v1, int[] v2) {
 		int c1 = 0;

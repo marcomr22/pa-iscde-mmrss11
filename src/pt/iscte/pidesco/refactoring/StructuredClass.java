@@ -20,7 +20,7 @@ public class StructuredClass {
 
 	private String name;
 	private Boolean hasSuperClass = false;
-	private Class superClassType;
+	private Class<?> superClassType;
 	private Boolean isAbstract = false;
 	private List<AnnotatedType> annotatedTypes = new ArrayList<AnnotatedType>();
 	private List<FieldDeclaration> fields = new ArrayList<FieldDeclaration>();
@@ -56,7 +56,7 @@ public class StructuredClass {
 		this.hasSuperClass = true;
 	}
 	
-	public void setSuperClassType(Class clazz) {
+	public void setSuperClassType(Class<?> clazz) {
 		this.superClassType = clazz;
 	}
 	
@@ -98,7 +98,7 @@ public class StructuredClass {
 
 	
 	
-	public Class getSuperClassType() {
+	public Class<?> getSuperClassType() {
 		return superClassType;
 	}
 	
