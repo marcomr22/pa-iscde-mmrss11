@@ -96,8 +96,6 @@ public class StructuredClass {
 		return modifiers;
 	}
 
-	
-	
 	public Class<?> getSuperClassType() {
 		return superClassType;
 	}

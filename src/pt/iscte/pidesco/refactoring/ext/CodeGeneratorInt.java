@@ -10,6 +10,7 @@ public interface CodeGeneratorInt {
 	
 	/**
 	 * This method is used to get the required information for the code generation
+	 * 
 	 * This method is intended to be used before the generateContent()
 	 * @param name is the string that is used for the superClass
 	 * @param fields is the List that should be placed in the code
@@ -18,6 +19,7 @@ public interface CodeGeneratorInt {
 	public abstract void inputValues(String name, List<FieldDeclaration> fields, List<MethodDeclaration> methods);
 	
 	/**This method is intended to process the information and compute the code for the SuperClass
+	 * 
 	 * This method is intended to be used after the inputValues()
 	 * @return returns the String witch composes the entire SuperClass code
 	 * */

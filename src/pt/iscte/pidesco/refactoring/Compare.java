@@ -20,10 +20,6 @@ public class Compare {
 
 	}
 
-	public Compare(List<StructuredClass> classes) {
-		this.classes = classes;
-	}
-
 	public void addClasses(StructuredClass clazz) {
 		this.classes.add(clazz);
 	}
